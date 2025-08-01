@@ -1,5 +1,5 @@
 <?php
-$serverName = "tcp:wayan.database.windows.net,1433";
+$serverName = "tcp:wayan.windows.net,1433";
 $database = "laundrydb";
 $username = "wayan";
 $password = "Jentung18";
