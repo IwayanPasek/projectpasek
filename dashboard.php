@@ -1,4 +1,8 @@
-<?php include('config/db.php'); ?>
+<?php 
+// Mengatur zona waktu ke Asia/Makassar (WITA)
+date_default_timezone_set('Asia/Makassar');
+include('config/db.php'); 
+?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -10,6 +14,7 @@
     <table border="1" cellpadding="8" style="width:100%;">
         <thead>
             <tr>
+                <th>Tanggal Masuk</th>
                 <th>Nama</th>
                 <th>No WA</th>
                 <th>Layanan</th>
@@ -20,16 +25,18 @@
         </thead>
         <tbody>
             <?php
-            // Menyiapkan dan menjalankan query untuk mengambil semua data pelanggan
-            // Mengurutkan berdasarkan data yang paling baru dibuat (jika ada kolom created_at)
-            // Jika tidak ada, ganti 'created_at' dengan 'id'
-            $stmt = $conn->prepare("SELECT * FROM pelanggan ORDER BY id DESC");
+            // Mengambil data pelanggan dan mengurutkannya berdasarkan tanggal masuk terbaru
+            $stmt = $conn->prepare("SELECT * FROM pelanggan ORDER BY tanggal_masuk DESC");
             $stmt->execute();
 
-            // Melakukan loop untuk setiap baris hasil query
             while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                // Membuat objek DateTime dari string tanggal database
+                $tanggal_obj = new DateTime($row['tanggal_masuk']);
+                // Memformat tanggal ke format Indonesia (Hari-Bulan-Tahun Jam:Menit)
+                $tanggal_formatted = $tanggal_obj->format('d-m-Y H:i');
+
                 echo "<tr>";
-                // Menggunakan htmlspecialchars untuk keamanan dari XSS
+                echo "<td>" . $tanggal_formatted . "</td>";
                 echo "<td>" . htmlspecialchars($row['nama']) . "</td>";
                 echo "<td>" . htmlspecialchars($row['no_wa']) . "</td>";
                 echo "<td>" . htmlspecialchars($row['layanan']) . "</td>";
