@@ -20,13 +20,16 @@
         </thead>
         <tbody>
             <?php
-            // Mengambil data pelanggan dan mengurutkannya berdasarkan yang terbaru
-            $stmt = $conn->prepare("SELECT * FROM pelanggan ORDER BY created_at DESC");
+            // Menyiapkan dan menjalankan query untuk mengambil semua data pelanggan
+            // Mengurutkan berdasarkan data yang paling baru dibuat (jika ada kolom created_at)
+            // Jika tidak ada, ganti 'created_at' dengan 'id'
+            $stmt = $conn->prepare("SELECT * FROM pelanggan ORDER BY id DESC");
             $stmt->execute();
 
-            // Menampilkan setiap baris data
+            // Melakukan loop untuk setiap baris hasil query
             while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                 echo "<tr>";
+                // Menggunakan htmlspecialchars untuk keamanan dari XSS
                 echo "<td>" . htmlspecialchars($row['nama']) . "</td>";
                 echo "<td>" . htmlspecialchars($row['no_wa']) . "</td>";
                 echo "<td>" . htmlspecialchars($row['layanan']) . "</td>";
