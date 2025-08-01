@@ -1,34 +1,26 @@
 <?php
-// Menghubungkan ke database
-include('config/db.php');
-?>
+// Menyertakan file koneksi
+include('../config/db.php');
 
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Tambah Pelanggan - Aplikasi Laundry</title>
-</head>
-<body>
-    <h2>Formulir Tambah Pelanggan Baru</h2>
+// Mengambil data dari form dengan aman
+$nama = $_POST['nama'];
+$no_wa = $_POST['no_wa'];
+$layanan = $_POST['layanan'];
+
+try {
+    // Menyiapkan query INSERT dengan placeholder (?) untuk mencegah SQL Injection
+    $sql = "INSERT INTO pelanggan (nama, no_wa, layanan) VALUES (?, ?, ?)";
+    $stmt = $conn->prepare($sql);
     
-    <form action="proses/simpan_pelanggan.php" method="POST">
-        <label>Nama Pelanggan:</label><br>
-        <input type="text" name="nama" required><br><br>
-        
-        <label>Nomor WhatsApp:</label><br>
-        <input type="text" name="no_wa" required><br><br>
-        
-        <label>Pilih Layanan:</label><br>
-        <select name="layanan" required>
-            <option value="Laundry Komplit">Laundry Komplit</option>
-            <option value="Hanya Keringkan">Hanya Keringkan</option>
-            <option value="Hanya Setrika">Hanya Setrika</option>
-        </select><br><br>
-        
-        <button type="submit">Simpan Pelanggan</button>
-    </form>
+    // Menjalankan query dengan data yang diikat ke placeholder
+    $stmt->execute([$nama, $no_wa, $layanan]);
 
-    <br>
-    <a href="dashboard.php">Kembali ke Dashboard</a>
-</body>
-</html>
+    // Mengalihkan kembali ke dashboard setelah berhasil
+    header('Location: ../dashboard.php');
+    exit(); // Penting untuk menghentikan eksekusi skrip setelah redirect
+
+} catch (PDOException $e) {
+    // Menampilkan pesan error jika query gagal
+    die("Error menyimpan data: " . $e->getMessage());
+}
+?>
