@@ -7,34 +7,49 @@
 <body>
     <h2>Dashboard Laundry</h2>
     <a href="index.php">Tambah Pelanggan Baru</a><br><br>
-    <table border="1" cellpadding="8">
-        <tr>
-            <th>Nama</th><th>No WA</th><th>Layanan</th><th>Harga</th><th>Status</th><th>Aksi</th>
-        </tr>
-        <?php
-        $stmt = $conn->query("SELECT * FROM pelanggan ORDER BY created_at DESC");
-        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            echo "<tr>";
-            echo "<td>{$row['nama']}</td>";
-            echo "<td>{$row['no_wa']}</td>";
-            echo "<td>{$row['layanan']}</td>";
-            echo "<td>" . ($row['harga'] ? 'Rp ' . number_format($row['harga'], 0, ',', '.') : '-') . "</td>";
-            echo "<td>{$row['status']}</td>";
-            echo "<td>
-                <form action='proses/isi_harga.php' method='POST' style='display:inline;'>
-                    <input type='hidden' name='id' value='{$row['id']}'>
-                    <input type='number' name='harga' placeholder='Harga' required>
-                    <button type='submit'>Isi Harga</button>
-                </form>
-                <form action='proses/tandai_selesai.php' method='POST' style='display:inline;'>
-                    <input type='hidden' name='id' value='{$row['id']}'>
-                    <button type='submit'>Selesai</button>
-                </form>
-                <a target='_blank' href='https://wa.me/{$row['no_wa']}?text=" . urlencode("Halo {$row['nama']}, cucian Anda sudah selesai. Silakan diambil. Total: Rp " . number_format($row['harga'], 0, ',', '.')) . "'>Kirim WA</a>
-            </td>";
-            echo "</tr>";
-        }
-        ?>
+    <table border="1" cellpadding="8" style="width:100%;">
+        <thead>
+            <tr>
+                <th>Nama</th>
+                <th>No WA</th>
+                <th>Layanan</th>
+                <th>Harga</th>
+                <th>Status</th>
+                <th>Aksi</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php
+            // Menyiapkan dan menjalankan query SELECT
+            // Mengasumsikan ada kolom 'created_at' untuk pengurutan
+            $stmt = $conn->prepare("SELECT * FROM pelanggan ORDER BY created_at DESC");
+            $stmt->execute();
+
+            // Melakukan loop untuk setiap baris hasil query
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                echo "<tr>";
+                echo "<td>" . htmlspecialchars($row['nama']) . "</td>";
+                echo "<td>" . htmlspecialchars($row['no_wa']) . "</td>";
+                echo "<td>" . htmlspecialchars($row['layanan']) . "</td>";
+                // Menampilkan harga dengan format Rupiah jika ada, jika tidak tampilkan '-'
+                echo "<td>" . ($row['harga'] ? 'Rp ' . number_format($row['harga'], 0, ',', '.') : '-') . "</td>";
+                echo "<td>" . htmlspecialchars($row['status']) . "</td>";
+                echo "<td>
+                        <form action='proses/isi_harga.php' method='POST' style='display:inline; margin-bottom: 5px;'>
+                            <input type='hidden' name='id' value='{$row['id']}'>
+                            <input type='number' name='harga' placeholder='Isi Harga' required>
+                            <button type='submit'>Simpan Harga</button>
+                        </form>
+                        <form action='proses/tandai_selesai.php' method='POST' style='display:inline; margin-bottom: 5px;'>
+                            <input type='hidden' name='id' value='{$row['id']}'>
+                            <button type='submit'>Tandai Selesai</button>
+                        </form>
+                        <a target='_blank' href='https://wa.me/" . htmlspecialchars($row['no_wa']) . "?text=" . urlencode("Halo " . htmlspecialchars($row['nama']) . ", cucian Anda sudah selesai. Silakan diambil. Total: Rp " . number_format($row['harga'], 0, ',', '.')) . "' style='display:inline-block;'>Kirim WA</a>
+                    </td>";
+                echo "</tr>";
+            }
+            ?>
+        </tbody>
     </table>
 </body>
 </html>
