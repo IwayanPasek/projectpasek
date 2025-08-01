@@ -1,4 +1,8 @@
-<?php include('config/db.php'); ?>
+<?php
+// Menghubungkan ke database
+include('config/db.php');
+?>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -6,6 +10,7 @@
 </head>
 <body>
     <h2>Formulir Tambah Pelanggan Baru</h2>
+    
     <form action="proses/simpan_pelanggan.php" method="POST">
         <label>Nama Pelanggan:</label><br>
         <input type="text" name="nama" required><br><br>
@@ -22,6 +27,7 @@
         
         <button type="submit">Simpan Pelanggan</button>
     </form>
+
     <br>
     <a href="dashboard.php">Kembali ke Dashboard</a>
 </body>
