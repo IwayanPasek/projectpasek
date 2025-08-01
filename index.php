@@ -1,4 +1,9 @@
 <?php include('config/db.php'); ?>
+
+header("Location: dashboard.php");
+exit;
+?>
+
 <!DOCTYPE html>
 <html>
 <head>
