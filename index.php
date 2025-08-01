@@ -1,24 +1,18 @@
-<?php include('config/db.php'); ?>
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Tambah Pelanggan - Laundry</title>
+    <title>Input Pelanggan</title>
 </head>
 <body>
-    <h2>Form Tambah Pelanggan</h2>
-    <form action="proses/simpan_pelanggan.php" method="POST">
+    <h2>Tambah Pelanggan Baru</h2>
+    <form action="proses/tambah_pelanggan.php" method="POST">
         <label>Nama:</label><br>
         <input type="text" name="nama" required><br>
-        <label>No. WhatsApp:</label><br>
+        <label>No WA:</label><br>
         <input type="text" name="no_wa" required><br>
         <label>Layanan:</label><br>
-        <select name="layanan">
-            <option>Laundry Komplit</option>
-            <option>Setrika Saja</option>
-            <option>Keringkan Saja</option>
-        </select><br><br>
+        <input type="text" name="layanan" required><br><br>
         <button type="submit">Simpan</button>
     </form>
-    <br><a href="dashboard.php">Lihat Dashboard</a>
 </body>
 </html>
