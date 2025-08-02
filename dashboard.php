@@ -66,11 +66,11 @@ include('config/db.php');
             while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                 // -- PERUBAHAN ADA DI BLOK INI --
 
-                // 1. Buat objek DateTime dan beri tahu PHP bahwa waktu dari DB adalah UTC
-                $tanggal_obj = new DateTime($row['tanggal_masuk'], new DateTimeZone('UTC'));
+                // 1. Buat objek DateTime dari waktu UTC yang ada di database
+                $tanggal_obj = new DateTime($row['tanggal_masuk']);
 
-                // 2. Konversikan zona waktunya ke WITA (Asia/Makassar)
-                $tanggal_obj->setTimezone(new DateTimeZone('Asia/Makassar'));
+                // 2. Tambahkan 8 jam secara manual untuk mengonversi dari UTC ke WITA
+                $tanggal_obj->modify('+8 hours');
                 
                 // Array untuk menerjemahkan nama hari ke bahasa Indonesia
                 $nama_hari_id = ['Sunday'=>'Minggu', 'Monday'=>'Senin', 'Tuesday'=>'Selasa', 'Wednesday'=>'Rabu', 'Thursday'=>'Kamis', 'Friday'=>'Jumat', 'Saturday'=>'Sabtu'];
