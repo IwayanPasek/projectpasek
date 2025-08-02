@@ -13,7 +13,7 @@ include('config/db.php');
 </head>
 <body>
     <div class="container">
-        <h2>Dashboard Laundry</h2>
+        <h2>Kumpul2 Laundry</h2>
         <a href="index.php" class="tambah-pelanggan-btn">Tambah Pelanggan Baru</a>
         
         <table class="laundry-table">
