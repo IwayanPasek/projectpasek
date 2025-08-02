@@ -82,7 +82,7 @@ include('config/db.php');
     </style>
 </head>
 <body>
-    <h2>Formulir Tambah Pelanggan Baru</h2>
+    <h2>Tambah Pelanggan Kumpul2 Laundry</h2>
     
     <form action="proses/simpan_pelanggan.php" method="POST">
         <label>Nama Pelanggan:</label>
