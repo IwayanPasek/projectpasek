@@ -9,7 +9,7 @@ include('config/db.php');
     <title>Dashboard Laundry</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-        /* Pengaturan dasar untuk seluruh halaman */
+        /* CSS Anda tetap sama, tidak perlu diubah */
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
@@ -17,20 +17,15 @@ include('config/db.php');
             background-color: #f4f4f9;
             color: #333;
         }
-
-        /* Membuat judul lebih menarik */
         h2 {
             color: #4a4a4a;
             text-align: center;
             margin-bottom: 20px;
         }
-
-        /* Mengatur link "Tambah Pelanggan Baru" agar terlihat seperti tombol */
         a {
             text-decoration: none;
             color: #007bff;
         }
-
         a[href="index.php"] {
             display: block;
             width: fit-content;
@@ -42,47 +37,38 @@ include('config/db.php');
             font-weight: bold;
             text-align: center;
         }
-
-        /* Styling untuk tabel agar responsif */
         table {
             width: 100%;
             border-collapse: collapse;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
             background-color: white;
         }
-
         th, td {
             padding: 12px;
             border: 1px solid #ddd;
             text-align: left;
         }
-
         th {
             background-color: #007bff;
             color: white;
             font-size: 14px;
         }
-
         tr:nth-child(even) {
             background-color: #f2f2f2;
         }
-
-        /* Styling untuk form dan tombol di dalam tabel */
         td form {
             display: flex;
             flex-direction: column;
             margin-bottom: 8px;
         }
-
         input[type="number"] {
             padding: 8px;
             margin-bottom: 5px;
             border: 1px solid #ccc;
             border-radius: 4px;
-            width: 100%; /* Agar input mengisi ruang */
-            box-sizing: border-box; /* Kalkulasi padding dan border dalam width */
+            width: 100%;
+            box-sizing: border-box;
         }
-
         button, a[target="_blank"] {
             padding: 8px 12px;
             border: none;
@@ -91,58 +77,48 @@ include('config/db.php');
             font-size: 12px;
             text-align: center;
             display: inline-block;
-            width: 100%; /* Tombol mengisi ruang */
+            width: 100%;
             box-sizing: border-box;
         }
-
         button[type="submit"] {
             background-color: #17a2b8;
             color: white;
         }
-
         form[action='proses/tandai_selesai.php'] button {
             background-color: #ffc107;
             color: #212529;
         }
-        
         a[target="_blank"] {
             background-color: #28a745;
             color: white;
             margin-top: 5px;
         }
-
-        /* Media Query untuk layar kecil (HP) */
         @media screen and (max-width: 600px) {
             body {
-                padding: 10px; /* Kurangi padding di layar kecil */
+                padding: 10px;
             }
-
             table, thead, tbody, th, td, tr {
                 display: block;
             }
-
             thead tr {
                 position: absolute;
                 top: -9999px;
                 left: -9999px;
             }
-
             tr {
                 border: 1px solid #ccc;
                 margin-bottom: 15px;
                 border-radius: 5px;
                 overflow: hidden;
             }
-
             td {
                 border: none;
                 border-bottom: 1px solid #eee;
                 position: relative;
                 padding-left: 45%;
-                min-height: 30px; /* Tinggi minimal sel */
+                min-height: 30px;
                 text-align: right;
             }
-
             td:before {
                 position: absolute;
                 left: 10px;
@@ -153,8 +129,6 @@ include('config/db.php');
                 font-weight: bold;
                 color: #555;
             }
-
-            /* Menambahkan label data sebelum setiap sel */
             td:nth-of-type(1):before { content: "Tanggal"; }
             td:nth-of-type(2):before { content: "Nama"; }
             td:nth-of-type(3):before { content: "No WA"; }
@@ -162,7 +136,6 @@ include('config/db.php');
             td:nth-of-type(5):before { content: "Harga"; }
             td:nth-of-type(6):before { content: "Status"; }
             td:nth-of-type(7):before { content: "Aksi"; }
-            
             td:last-child {
                 border-bottom: 0;
             }
@@ -194,8 +167,26 @@ include('config/db.php');
             while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                 // Membuat objek DateTime dari string tanggal database
                 $tanggal_obj = new DateTime($row['tanggal_masuk']);
-                // Memformat tanggal ke format Indonesia (Hari-Bulan-Tahun Jam:Menit)
-                $tanggal_formatted = $tanggal_obj->format('d-m-Y H:i');
+
+                // -- PERUBAHAN DIMULAI DI SINI --
+                // Array untuk menerjemahkan nama hari ke bahasa Indonesia
+                $nama_hari_id = array(
+                    'Sunday'    => 'Minggu',
+                    'Monday'    => 'Senin',
+                    'Tuesday'   => 'Selasa',
+                    'Wednesday' => 'Rabu',
+                    'Thursday'  => 'Kamis',
+                    'Friday'    => 'Jumat',
+                    'Saturday'  => 'Sabtu'
+                );
+
+                // Mengambil nama hari dalam bahasa Inggris (misal: "Saturday")
+                $hari_en = $tanggal_obj->format('l');
+
+                // Menerjemahkan dan menggabungkan dengan format tanggal yang sudah ada
+                // Contoh hasil: "Sabtu, 02-08-2025 18:20"
+                $tanggal_formatted = $nama_hari_id[$hari_en] . ', ' . $tanggal_obj->format('d-m-Y H:i');
+                // -- PERUBAHAN SELESAI --
 
                 echo "<tr>";
                 echo "<td>" . $tanggal_formatted . "</td>";
@@ -204,7 +195,6 @@ include('config/db.php');
                 echo "<td>" . htmlspecialchars($row['layanan']) . "</td>";
                 echo "<td>" . ($row['harga'] ? 'Rp ' . number_format($row['harga'], 0, ',', '.') : '-') . "</td>";
                 echo "<td>" . htmlspecialchars($row['status']) . "</td>";
-                // Menghapus inline style dari form dan link di kolom Aksi
                 echo "<td>
                         <form action='proses/isi_harga.php' method='POST'>
                             <input type='hidden' name='id' value='{$row['id']}'>
