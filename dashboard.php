@@ -44,29 +44,41 @@ include('config/db.php'); // Pastikan path ke file koneksi database sudah benar
                         $tanggal_obj = new DateTime($row['tanggal_masuk'], new DateTimeZone('UTC'));
                         $tanggal_obj->setTimezone(new DateTimeZone('Asia/Makassar'));
                         $nama_hari_id = [
-                            'Sunday'    => 'Minggu', 
-                            'Monday'    => 'Senin', 
-                            'Tuesday'   => 'Selasa', 
-                            'Wednesday' => 'Rabu', 
-                            'Thursday'  => 'Kamis', 
-                            'Friday'    => 'Jumat', 
-                            'Saturday'  => 'Sabtu'
+                            'Sunday'    => 'Minggu', 'Monday'    => 'Senin', 'Tuesday'   => 'Selasa', 
+                            'Wednesday' => 'Rabu', 'Thursday'  => 'Kamis', 'Friday'    => 'Jumat', 'Saturday'  => 'Sabtu'
                         ];
                         $hari_en = $tanggal_obj->format('l');
                         $tanggal_formatted = $nama_hari_id[$hari_en] . ', ' . $tanggal_obj->format('d-m-Y H:i');
 
-                        // 2. FORMAT NOMOR WHATSAPP (UBAH '0' MENJADI '62')
+                        // 2. FORMAT NOMOR WHATSAPP
                         $no_wa_asli = $row['no_wa'];
-                        // Hapus karakter selain angka
                         $no_wa_bersih = preg_replace('/[^0-9]/', '', $no_wa_asli);
-                        // Jika nomor diawali dengan '0', ganti '0' dengan '62'
                         if (substr($no_wa_bersih, 0, 1) === '0') {
                             $nomor_wa_formatted = '62' . substr($no_wa_bersih, 1);
                         } else {
                             $nomor_wa_formatted = $no_wa_bersih; 
                         }
 
-                        // 3. TAMPILKAN DATA DALAM TABEL
+                        // 3. PERSIAPKAN PESAN WHATSAPP DENGAN LINK QRIS
+                        $nama_pelanggan = htmlspecialchars($row['nama']);
+                        $total_tagihan = 'Rp ' . number_format($row['harga'], 0, ',', '.');
+                        $nomor_rekening_bri = "800601005655505"; // <-- GANTI DENGAN NOMOR REKENING ANDA
+
+                        // Membuat link otomatis ke gambar QRIS di root folder
+                        $nama_file_qris = "qris.jpg";
+                        $base_url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://" . $_SERVER['HTTP_HOST'];
+                        $link_qris = $base_url . "/" . $nama_file_qris;
+                        
+                        $pesan_wa = "Halo {$nama_pelanggan}, cucian anda sudah selesai dan siap di ambil. Total tagihan: {$total_tagihan}\n\n";
+                        $pesan_wa .= "Bisa bayar cash\n";
+                        $pesan_wa .= "Bisa lewat QRIS (lihat kode di: {$link_qris} )\n";
+                        // --- PERUBAHAN DI SINI ---
+                        $pesan_wa .= "Dan bisa tf ke bank Bri nomer:\n"; // Teks di baris pertama
+                        $pesan_wa .= "{$nomor_rekening_bri}\n\n";       // Nomor rekening di baris baru
+                        // -------------------------
+                        $pesan_wa .= "Trimakasi atas kerjasamanya dan mohon maaf atas kekurangannya🙏";
+
+                        // 4. TAMPILKAN DATA DALAM TABEL
                         echo "<tr>";
                         echo "<td data-label='Tanggal Masuk'>" . $tanggal_formatted . "</td>";
                         echo "<td data-label='Nama'>" . htmlspecialchars($row['nama']) . "</td>";
@@ -85,13 +97,12 @@ include('config/db.php'); // Pastikan path ke file koneksi database sudah benar
                                         <input type='hidden' name='id' value='{$row['id']}'>
                                         <button type='submit' class='btn selesai'>Tandai Selesai</button>
                                     </form>
-                                    <a class='btn whatsapp' target='_blank' href='https://wa.me/" . $nomor_wa_formatted . "?text=" . urlencode("Halo " . htmlspecialchars($row['nama']) . ", cucian Anda sudah selesai dan siap diambil. Total tagihan: Rp " . number_format($row['harga'], 0, ',', '.')) . "'>Kirim WA</a>
+                                    <a class='btn whatsapp' target='_blank' href='https://wa.me/{$nomor_wa_formatted}?text=" . urlencode($pesan_wa) . "'>Kirim WA</a>
                                 </div>
                               </td>";
                         echo "</tr>";
                     }
                 } catch (PDOException $e) {
-                    // Menampilkan pesan error jika koneksi atau query database gagal
                     echo "<tr><td colspan='7'>Error: " . $e->getMessage() . "</td></tr>";
                 }
                 ?>
