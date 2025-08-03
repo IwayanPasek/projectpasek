@@ -62,7 +62,7 @@ include('config/db.php'); // Pastikan path ke file koneksi database sudah benar
                         // 3. PERSIAPKAN PESAN WHATSAPP
                         $nama_pelanggan = htmlspecialchars($row['nama']);
                         $total_tagihan = 'Rp ' . number_format($row['harga'], 0, ',', '.');
-                        $nomor_rekening_bri = "800601005655505"; // <-- GANTI DENGAN NOMOR REKENING ANDA
+                        $nomor_rekening_bri = "8006-0100-5655-505"; // <-- GANTI DENGAN NOMOR REKENING ANDA
 
                         // ====================================================================
                         // == PERUBAHAN DI SINI: Gunakan link langsung dari Google Drive      ==
