@@ -67,7 +67,7 @@ include('config/db.php'); // Pastikan path ke file koneksi database sudah benar
                         // ====================================================================
                         // == PERUBAHAN DI SINI: Gunakan link langsung dari Google Drive      ==
                         // ====================================================================
-                        $link_qris = "https://drive.google.com/uc?export=view&id=11HOGiW9ArQ4vO-LAp9_SK-U-xyP-cPOd";
+                        $link_qris = "https://drive.google.com/uc?export=view&id=1pGtDLxLxluzpzIy3tHAF8YHZZqj6ru90";
                         
                         $pesan_wa = "Halo {$nama_pelanggan}, cucian anda sudah selesai dan siap di ambil. Total tagihan: {$total_tagihan}\n\n";
                         $pesan_wa .= "Bisa bayar cash\n";
