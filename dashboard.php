@@ -75,6 +75,7 @@ include('config/db.php'); // Pastikan path ke file koneksi database sudah benar
                         $pesan_wa .= "Dan bisa tf ke bank Bri nomer:\n";
                         $pesan_wa .= "{$nomor_rekening_bri}\n\n";
                         $pesan_wa .= "Trimakasi atas kerjasamanya dan mohon maaf atas kekurangannya🙏";
+                        $pesan_wa .= "Untuk info lebih lanjut bisa balas pesan ini ya";
 
                         // 4. TAMPILKAN DATA DALAM TABEL
                         echo "<tr>";
