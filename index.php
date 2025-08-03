@@ -103,5 +103,21 @@ include('config/db.php');
 
     <br>
     <a href="dashboard.php">Lihat Dashboard</a>
+
+    <script>
+        // Fungsi ini akan memanggil file 'keep_alive.php' setiap 5 menit
+        // untuk mencegah sesi menjadi idle atau timeout.
+        setInterval(function() {
+            fetch('keep_alive.php').then(response => {
+                if (response.ok) {
+                    // Anda bisa melihat pesan ini di Console browser (F12) untuk memastikan skrip berjalan
+                    console.log('Sesi tetap aktif pada ' + new Date().toLocaleTimeString());
+                }
+            }).catch(error => {
+                console.error('Gagal menjaga sesi tetap aktif:', error);
+            });
+        }, 300000); // 300000 milidetik = 5 menit
+    </script>
+
 </body>
 </html>
