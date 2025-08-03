@@ -61,21 +61,17 @@ include('config/db.php'); // Pastikan path ke file koneksi database sudah benar
 
                         // 3. PERSIAPKAN PESAN WHATSAPP
                         $nama_pelanggan = htmlspecialchars($row['nama']);
-                        $total_tagihan = 'Rp ' . number_format($row['harga'], 0, ',', '.');
-                        $nomor_rekening_bri = "8006-0100-5655-505"; // <-- GANTI DENGAN NOMOR REKENING ANDA
-
-                        // ====================================================================
-                        // == PERUBAHAN DI SINI: Gunakan link langsung dari Google Drive      ==
-                        // ====================================================================
-                        $link_qris = "https://drive.google.com/uc?export=view&id=1pGtDLxLxluzpzIy3tHAF8YHZZqj6ru90";
+                        $nomor_rekening_bri = "ISI_NOMOR_REKENING_ANDA"; // GANTI DENGAN NOMOR REKENING ANDA
                         
-                        $pesan_wa = "Halo {$nama_pelanggan}, cucian anda sudah selesai dan siap di ambil. Total tagihan: {$total_tagihan}\n\n";
+                        // Link langsung ke gambar QRIS di Google Drive
+                        $link_qris = "https://drive.google.com/uc?export=view&id=1pGtDLxLxluzpzIy3tHAF8YHZZqj6ru90"; // Ganti ID jika perlu
+
+                        $pesan_wa = "Halo {$nama_pelanggan}, cucian anda sudah selesai dan siap di ambil. Total tagihan: Rp " . number_format($row['harga'] ?? 0, 0, ',', '.') . "\n\n";
                         $pesan_wa .= "Bisa bayar cash\n";
+                        $pesan_wa .= "Bisa lewat QRIS (lihat kode di: {$link_qris} )\n";
                         $pesan_wa .= "Dan bisa tf ke bank Bri nomer:\n";
                         $pesan_wa .= "{$nomor_rekening_bri}\n\n";
-                        $pesan_wa .= "Bisa lewat QRIS (lihat kode di: {$link_qris} )\n";
-                        $pesan_wa .= "Trimakasi atas kerjasamanya dan mohon maaf atas kekurangannya🙏.";
-                        $pesan_wa .= "Untuk info lebih lanjut bisa balas pesan ini ya";
+                        $pesan_wa .= "Trimakasi atas kerjasamanya dan mohon maaf atas kekurangannya🙏";
 
                         // 4. TAMPILKAN DATA DALAM TABEL
                         echo "<tr>";
@@ -83,7 +79,17 @@ include('config/db.php'); // Pastikan path ke file koneksi database sudah benar
                         echo "<td data-label='Nama'>" . htmlspecialchars($row['nama']) . "</td>";
                         echo "<td data-label='No WA'>" . htmlspecialchars($row['no_wa']) . "</td>";
                         echo "<td data-label='Layanan'>" . htmlspecialchars($row['layanan']) . "</td>";
-                        echo "<td data-label='Harga'>" . ($row['harga'] ? 'Rp ' . number_format($row['harga'], 0, ',', '.') : '-') . "</td>";
+                        
+                        // --- BAGIAN YANG DIPERBAIKI ---
+                        echo "<td data-label='Harga'>";
+                        if (isset($row['harga']) && is_numeric($row['harga'])) {
+                            echo 'Rp ' . number_format($row['harga'], 0, ',', '.');
+                        } else {
+                            echo '-'; // Tampilkan strip jika harga kosong atau bukan angka
+                        }
+                        echo "</td>";
+                        // --- BATAS AKHIR PERBAIKAN ---
+
                         echo "<td data-label='Status'>" . htmlspecialchars($row['status']) . "</td>";
                         echo "<td data-label='Aksi'>
                                 <div class='aksi-container'>
@@ -108,5 +114,17 @@ include('config/db.php'); // Pastikan path ke file koneksi database sudah benar
             </tbody>
         </table>
     </div>
+
+    <script>
+        setInterval(function() {
+            fetch('keep_alive.php').then(response => {
+                if (response.ok) {
+                    console.log('Sesi tetap aktif pada ' + new Date().toLocaleTimeString());
+                }
+            }).catch(error => {
+                console.error('Gagal menjaga sesi tetap aktif:', error);
+            });
+        }, 300000); // 5 menit
+    </script>
 </body>
 </html>
