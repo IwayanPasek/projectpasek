@@ -59,23 +59,21 @@ include('config/db.php'); // Pastikan path ke file koneksi database sudah benar
                             $nomor_wa_formatted = $no_wa_bersih; 
                         }
 
-                        // 3. PERSIAPKAN PESAN WHATSAPP DENGAN LINK QRIS
+                        // 3. PERSIAPKAN PESAN WHATSAPP
                         $nama_pelanggan = htmlspecialchars($row['nama']);
                         $total_tagihan = 'Rp ' . number_format($row['harga'], 0, ',', '.');
                         $nomor_rekening_bri = "800601005655505"; // <-- GANTI DENGAN NOMOR REKENING ANDA
 
-                        // Membuat link otomatis ke gambar QRIS di root folder
-                        $nama_file_qris = "qris.jpg";
-                        $base_url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://" . $_SERVER['HTTP_HOST'];
-                        $link_qris = $base_url . "/" . $nama_file_qris;
+                        // ====================================================================
+                        // == PERUBAHAN DI SINI: Gunakan link langsung dari Google Drive      ==
+                        // ====================================================================
+                        $link_qris = "https://drive.google.com/uc?export=view&id=11HOGiW9ArQ4vO-LAp9_SK-U-xyP-cPOd";
                         
                         $pesan_wa = "Halo {$nama_pelanggan}, cucian anda sudah selesai dan siap di ambil. Total tagihan: {$total_tagihan}\n\n";
                         $pesan_wa .= "Bisa bayar cash\n";
                         $pesan_wa .= "Bisa lewat QRIS (lihat kode di: {$link_qris} )\n";
-                        // --- PERUBAHAN DI SINI ---
-                        $pesan_wa .= "Dan bisa tf ke bank Bri nomer:\n"; // Teks di baris pertama
-                        $pesan_wa .= "{$nomor_rekening_bri}\n\n";       // Nomor rekening di baris baru
-                        // -------------------------
+                        $pesan_wa .= "Dan bisa tf ke bank Bri nomer:\n";
+                        $pesan_wa .= "{$nomor_rekening_bri}\n\n";
                         $pesan_wa .= "Trimakasi atas kerjasamanya dan mohon maaf atas kekurangannya🙏";
 
                         // 4. TAMPILKAN DATA DALAM TABEL
