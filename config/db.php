@@ -5,13 +5,35 @@ $database = "laundrydb";
 $username = "wayan";
 $password = "Jentung18";
 
-try {
-    // Membuat koneksi PDO
-    $conn = new PDO("sqlsrv:server=$serverName;Database=$database", $username, $password);
-    // Mengatur mode error untuk menampilkan exception jika terjadi kesalahan
-    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-} catch (PDOException $e) {
-    // Menghentikan skrip dan menampilkan pesan error jika koneksi gagal
-    die("Koneksi ke database gagal: " . $e->getMessage());
+// --- Penambahan untuk Retry Logic ---
+$max_attempts = 3; // Jumlah maksimal percobaan koneksi
+$retry_delay = 5;  // Waktu tunggu dalam detik sebelum mencoba lagi
+$conn = null;      // Inisialisasi variabel koneksi
+// ------------------------------------
+
+for ($attempt = 1; $attempt <= $max_attempts; $attempt++) {
+    try {
+        // Membuat koneksi PDO dengan LoginTimeout
+        $conn = new PDO("sqlsrv:server=$serverName;Database=$database;LoginTimeout=30", $username, $password);
+        
+        // Mengatur mode error untuk menampilkan exception
+        $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+        // Jika koneksi berhasil, hentikan loop
+        break; 
+
+    } catch (PDOException $e) {
+        // Jika ini bukan percobaan terakhir, tunggu sebelum mencoba lagi
+        if ($attempt < $max_attempts) {
+            sleep($retry_delay);
+        } else {
+            // Jika semua percobaan gagal, hentikan skrip dan tampilkan pesan error
+            die("Koneksi ke database gagal setelah $max_attempts percobaan: " . $e->getMessage());
+        }
+    }
 }
+
+// Jika Anda ingin menampilkan pesan sukses setelah koneksi berhasil
+// echo "Koneksi berhasil dibuat!";
+
 ?>
