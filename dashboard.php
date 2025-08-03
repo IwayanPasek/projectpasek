@@ -68,10 +68,14 @@ include('config/db.php'); // Pastikan path ke file koneksi database sudah benar
 
                         $pesan_wa = "Halo {$nama_pelanggan}, cucian anda sudah selesai dan siap di ambil. Total tagihan: Rp " . number_format($row['harga'] ?? 0, 0, ',', '.') . "\n\n";
                         $pesan_wa .= "Bisa bayar cash\n";
+                        
                         $pesan_wa .= "Dan bisa tf ke bank Bri nomer:\n";
+                        
                         $pesan_wa .= "{$nomor_rekening_bri}\n\n";
+                        
                         $pesan_wa .= "Bisa lewat QRIS (lihat kode di: {$link_qris} )\n";
                         $pesan_wa .= "Trimakasi atas kerjasamanya dan mohon maaf atas kekurangannya🙏";
+                        $pesan_wa .= "Untuk info lebih lanjut bisa balas pesan ini ya";
 
                         // 4. TAMPILKAN DATA DALAM TABEL
                         echo "<tr>";
