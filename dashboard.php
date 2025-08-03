@@ -61,7 +61,7 @@ include('config/db.php'); // Pastikan path ke file koneksi database sudah benar
 
                         // 3. PERSIAPKAN PESAN WHATSAPP
                         $nama_pelanggan = htmlspecialchars($row['nama']);
-                        $nomor_rekening_bri = "ISI_NOMOR_REKENING_ANDA"; // GANTI DENGAN NOMOR REKENING ANDA
+                        $nomor_rekening_bri = "8006-0100-5655-505"; // GANTI DENGAN NOMOR REKENING ANDA
                         
                         // Link langsung ke gambar QRIS di Google Drive
                         $link_qris = "https://drive.google.com/uc?export=view&id=1pGtDLxLxluzpzIy3tHAF8YHZZqj6ru90"; // Ganti ID jika perlu
